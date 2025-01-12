@@ -1,0 +1,2 @@
+# bazarr-auto-translate
+ 
