@@ -92,7 +92,7 @@ def process_subtitles(item, media_type):
     # Try to find or download English subtitles
     logger.info("Looking for English subtitles...")
     en_sub = next((s for s in subs if s['code2'] == 'en'), None)
-    if not en_sub:
+    if not en_sub or en_sub['path'] is None:
         logger.info("No English subtitles found, attempting to download...")
         download_subtitles(media_type, 'en', **params)
         media_info = get_subtitles_info(media_type, **{f"{k}[]": v for k, v in params.items()})
@@ -100,7 +100,7 @@ def process_subtitles(item, media_type):
             en_sub = next((s for s in media_info['data'][0]['subtitles'] if s['code2'] == 'en'), None)
             logger.info("English subtitles download completed")
     
-    if en_sub:
+    if en_sub and en_sub['path'] is not None:
         logger.info(f"Found English subtitles at: {en_sub['path']}")
         logger.info(f"Attempting to translate from English to {FIRST_LANG}...")
         result = translate_subtitles(en_sub['path'], FIRST_LANG, 
